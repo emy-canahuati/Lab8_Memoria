@@ -5,17 +5,16 @@ import java.awt.*;
 
 public class Mainframe extends JFrame {
 
-    private Toolbarpanel    toolbarPanel;
+    private Toolbarpanel toolbarPanel;
     private Foldertreepanel folderTreePanel;
-    private Filelistpanel   fileListPanel;
+    private Filelistpanel fileListPanel;
     private Actioninputpanel actionInputPanel;
-    private Statusbarpanel  statusBarPanel;
-
+    private Statusbarpanel statusBarPanel;
     private JSplitPane splitPane;
 
-    private static final int WINDOW_WIDTH      = 1100;
-    private static final int WINDOW_HEIGHT     = 680;
-    private static final int DIVIDER_LOCATION  = 260;
+    private static final int WINDOW_WIDTH = 1100;
+    private static final int WINDOW_HEIGHT = 680;
+    private static final int DIVIDER_LOCATION = 260;
 
     public Mainframe() {
         super("Explorador de Archivos");
@@ -23,21 +22,20 @@ public class Mainframe extends JFrame {
         buildLayout();
         configureFrame();
 
-        // Crear el controlador DESPUÉS de initComponents()
-        // No requiere rutas del disco — todo es virtual
+        // Controlador creado DESPUES de initComponents
         FileExplorerController controller = new FileExplorerController(this);
         controller.init();
     }
 
     private void initComponents() {
-        toolbarPanel    = new Toolbarpanel();
+        toolbarPanel = new Toolbarpanel();
         folderTreePanel = new Foldertreepanel();
-        fileListPanel   = new Filelistpanel();
+        fileListPanel = new Filelistpanel();
         actionInputPanel = new Actioninputpanel();
-        statusBarPanel  = new Statusbarpanel();
+        statusBarPanel = new Statusbarpanel();
 
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                                   folderTreePanel, fileListPanel);
+                folderTreePanel, fileListPanel);
         splitPane.setDividerLocation(DIVIDER_LOCATION);
         splitPane.setDividerSize(5);
         splitPane.setContinuousLayout(true);
@@ -49,10 +47,10 @@ public class Mainframe extends JFrame {
         add(toolbarPanel, BorderLayout.NORTH);
         add(splitPane, BorderLayout.CENTER);
 
-        JPanel southWrapper = new JPanel(new BorderLayout(0, 0));
-        southWrapper.add(actionInputPanel, BorderLayout.NORTH);
-        southWrapper.add(statusBarPanel,   BorderLayout.SOUTH);
-        add(southWrapper, BorderLayout.SOUTH);
+        JPanel south = new JPanel(new BorderLayout(0, 0));
+        south.add(actionInputPanel, BorderLayout.NORTH);
+        south.add(statusBarPanel, BorderLayout.SOUTH);
+        add(south, BorderLayout.SOUTH);
     }
 
     private void configureFrame() {
@@ -62,10 +60,23 @@ public class Mainframe extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    // ── Getters para el controlador ──────────────────────────────────────────
-    public Toolbarpanel     getToolbarPanel()    { return toolbarPanel; }
-    public Foldertreepanel  getFolderTreePanel() { return folderTreePanel; }
-    public Filelistpanel    getFileListPanel()   { return fileListPanel; }
-    public Actioninputpanel getActionInputPanel(){ return actionInputPanel; }
-    public Statusbarpanel   getStatusBarPanel()  { return statusBarPanel; }
+    public Toolbarpanel getToolbarPanel() {
+        return toolbarPanel;
+    }
+
+    public Foldertreepanel getFolderTreePanel() {
+        return folderTreePanel;
+    }
+
+    public Filelistpanel getFileListPanel() {
+        return fileListPanel;
+    }
+
+    public Actioninputpanel getActionInputPanel() {
+        return actionInputPanel;
+    }
+
+    public Statusbarpanel getStatusBarPanel() {
+        return statusBarPanel;
+    }
 }

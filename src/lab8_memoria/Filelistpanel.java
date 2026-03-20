@@ -9,15 +9,15 @@ import java.awt.event.MouseEvent;
 
 public class Filelistpanel extends JPanel {
 
-    private static final String[] COLUMN_NAMES  = {"Nombre", "Tipo", "Tamaño", "Fecha de modificación"};
+    private static final String[] COLUMN_NAMES  = {"Nombre", "Tipo", "Tamanio", "Fecha de modificacion"};
     private static final int[]    COLUMN_WIDTHS  = {300, 120, 90, 180};
 
-    private JTable           fileTable;
+    private JTable            fileTable;
     private DefaultTableModel tableModel;
-    private JScrollPane      scrollPane;
-    private JLabel           headerLabel;
-    private JLabel           emptyLabel;
-    private JPanel           contentPanel;
+    private JScrollPane       scrollPane;
+    private JLabel            headerLabel;
+    private JLabel            emptyLabel;
+    private JPanel            contentPanel;
 
     private static final Color COLOR_BG        = Color.WHITE;
     private static final Color COLOR_HEADER_BG = new Color(230, 230, 230);
@@ -29,7 +29,7 @@ public class Filelistpanel extends JPanel {
     public Filelistpanel() {
         initComponents();
         buildLayout();
-        showEmptyState(true);   // empieza vacío — el controlador cargará los datos
+        showEmptyState(true);   // empieza vacio — el controlador llenara la tabla
     }
 
     private void initComponents() {
@@ -61,12 +61,11 @@ public class Filelistpanel extends JPanel {
             fileTable.getColumnModel().getColumn(i).setPreferredWidth(COLUMN_WIDTHS[i]);
 
         fileTable.getColumnModel().getColumn(0).setCellRenderer(new FileNameCellRenderer());
-        TableCellRenderer altRenderer = new AltRowRenderer();
-        fileTable.getColumnModel().getColumn(1).setCellRenderer(altRenderer);
+        TableCellRenderer alt = new AltRowRenderer();
+        fileTable.getColumnModel().getColumn(1).setCellRenderer(alt);
         fileTable.getColumnModel().getColumn(2).setCellRenderer(new SizeColumnRenderer());
-        fileTable.getColumnModel().getColumn(3).setCellRenderer(altRenderer);
+        fileTable.getColumnModel().getColumn(3).setCellRenderer(alt);
 
-        // El doble clic lo maneja el listener registrado por el controlador
         scrollPane = new JScrollPane(fileTable);
         scrollPane.setBorder(null);
         scrollPane.setBackground(COLOR_BG);
@@ -79,7 +78,7 @@ public class Filelistpanel extends JPanel {
         headerLabel.setBorder(new EmptyBorder(6, 8, 6, 8));
         headerLabel.setPreferredSize(new Dimension(0, 30));
 
-        emptyLabel = new JLabel("Esta carpeta está vacía", SwingConstants.CENTER);
+        emptyLabel = new JLabel("Esta carpeta esta vacia", SwingConstants.CENTER);
         emptyLabel.setFont(new Font("Segoe UI", Font.ITALIC, 14));
         emptyLabel.setForeground(COLOR_EMPTY);
 
@@ -91,11 +90,11 @@ public class Filelistpanel extends JPanel {
     private void buildLayout() {
         setLayout(new BorderLayout(0, 0));
         setBackground(COLOR_BG);
-        add(headerLabel, BorderLayout.NORTH);
+        add(headerLabel,  BorderLayout.NORTH);
         add(contentPanel, BorderLayout.CENTER);
     }
 
-    // ── API pública ───────────────────────────────────────────────────────────
+    // ── API publica ───────────────────────────────────────────────────────────
 
     public void setFiles(Object[][] rows, String folderName) {
         tableModel.setRowCount(0);
@@ -114,18 +113,21 @@ public class Filelistpanel extends JPanel {
         return row < 0 ? null : tableModel.getValueAt(row, 0).toString();
     }
 
-    public int getSelectedRowIndex() {
-        return fileTable.getSelectedRow();
+    public int getSelectedRowIndex() { return fileTable.getSelectedRow(); }
+
+    public java.util.List<String> getSelectedFileNames() {
+        java.util.List<String> nombres = new java.util.ArrayList<>();
+        for (int row : fileTable.getSelectedRows())
+            nombres.add(tableModel.getValueAt(row, 0).toString());
+        return nombres;
     }
 
     public void addDoubleClickListener(java.util.function.Consumer<String> listener) {
         fileTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
+            @Override public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     int row = fileTable.getSelectedRow();
-                    if (row >= 0)
-                        listener.accept(tableModel.getValueAt(row, 0).toString());
+                    if (row >= 0) listener.accept(tableModel.getValueAt(row, 0).toString());
                 }
             }
         });
@@ -135,17 +137,11 @@ public class Filelistpanel extends JPanel {
         fileTable.getSelectionModel().addListSelectionListener(l);
     }
 
-    // ── Utilidades internas ───────────────────────────────────────────────────
+    // ── Utilidades ────────────────────────────────────────────────────────────
 
     private void updateHeader(String folder, int count) {
-        headerLabel.setText("  " + folder + "   (" + count + " elemento"
-                            + (count != 1 ? "s" : "") + ")");
-    }
-
-    private String getCurrentFolderName() {
-        String t = headerLabel.getText().trim();
-        int i = t.indexOf("(");
-        return i > 0 ? t.substring(0, i).trim() : t;
+        headerLabel.setText("  " + folder + "   ("
+                + count + " elemento" + (count != 1 ? "s" : "") + ")");
     }
 
     private void showEmptyState(boolean empty) {
@@ -159,21 +155,14 @@ public class Filelistpanel extends JPanel {
 
     private class FileNameCellRenderer extends DefaultTableCellRenderer {
         @Override
-        public Component getTableCellRendererComponent(
-                JTable table, Object value, boolean isSelected,
-                boolean hasFocus, int row, int col) {
-
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int col) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
-
-            String name = value != null ? value.toString() : "";
-            String type = tableModel.getValueAt(row, 1).toString();
-
-            ImageIcon icon;
-            if (type.equalsIgnoreCase("Carpeta"))
-                icon = IconUtil.folderIconFor(name, false, IconUtil.SIZE_TABLE);
-            else
-                icon = IconUtil.fileIconFor(name, IconUtil.SIZE_TABLE);
-
+            String    name = value != null ? value.toString() : "";
+            String    type = tableModel.getValueAt(row, 1).toString();
+            ImageIcon icon = type.equalsIgnoreCase("Carpeta")
+                    ? IconUtil.folderIconFor(name, false, IconUtil.SIZE_TABLE)
+                    : IconUtil.fileIconFor(name, IconUtil.SIZE_TABLE);
             setIcon(icon);
             setText(name);
             styleCell(this, isSelected, row);
@@ -185,9 +174,8 @@ public class Filelistpanel extends JPanel {
 
     private class AltRowRenderer extends DefaultTableCellRenderer {
         @Override
-        public Component getTableCellRendererComponent(
-                JTable table, Object value, boolean isSelected,
-                boolean hasFocus, int row, int col) {
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int col) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
             styleCell(this, isSelected, row);
             setBorder(new EmptyBorder(0, 8, 0, 4));
@@ -197,9 +185,8 @@ public class Filelistpanel extends JPanel {
 
     private class SizeColumnRenderer extends AltRowRenderer {
         @Override
-        public Component getTableCellRendererComponent(
-                JTable table, Object value, boolean isSelected,
-                boolean hasFocus, int row, int col) {
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int col) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
             setHorizontalAlignment(RIGHT);
             setBorder(new EmptyBorder(0, 4, 0, 12));
@@ -209,12 +196,7 @@ public class Filelistpanel extends JPanel {
 
     private void styleCell(JLabel label, boolean selected, int row) {
         label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        if (!selected) {
-            label.setBackground(row % 2 == 0 ? Color.WHITE : COLOR_ROW_ALT);
-            label.setForeground(Color.BLACK);
-        } else {
-            label.setBackground(COLOR_SELECT);
-            label.setForeground(Color.BLACK);
-        }
+        label.setBackground(selected ? COLOR_SELECT : (row % 2 == 0 ? Color.WHITE : COLOR_ROW_ALT));
+        label.setForeground(Color.BLACK);
     }
 }

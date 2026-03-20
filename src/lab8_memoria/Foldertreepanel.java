@@ -8,13 +8,13 @@ import java.awt.*;
 
 public class Foldertreepanel extends JPanel {
 
-    private JTree                  folderTree;
-    private DefaultTreeModel       treeModel;
+    private JTree folderTree;
+    private DefaultTreeModel treeModel;
     private DefaultMutableTreeNode rootNode;
-    private JScrollPane            scrollPane;
-    private JLabel                 headerLabel;
+    private JScrollPane scrollPane;
+    private JLabel headerLabel;
 
-    private static final Color COLOR_BG     = new Color(250, 250, 250);
+    private static final Color COLOR_BG = new Color(250, 250, 250);
     private static final Color COLOR_HEADER = new Color(230, 230, 230);
     private static final Color COLOR_SELECT = new Color(204, 232, 255);
     private static final Color COLOR_BORDER = new Color(210, 210, 210);
@@ -22,11 +22,10 @@ public class Foldertreepanel extends JPanel {
     public Foldertreepanel() {
         initComponents();
         buildLayout();
-        // ← loadDemoTree() eliminado: el controlador cargará el árbol virtual
     }
 
     private void initComponents() {
-        rootNode  = new DefaultMutableTreeNode("Documentos");
+        rootNode = new DefaultMutableTreeNode("Documentos");
         treeModel = new DefaultTreeModel(rootNode);
 
         folderTree = new JTree(treeModel);
@@ -36,9 +35,9 @@ public class Foldertreepanel extends JPanel {
         folderTree.setRowHeight(26);
         folderTree.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         folderTree.setBorder(new EmptyBorder(4, 4, 4, 4));
-        folderTree.setCellRenderer(new FolderTreeCellRenderer());
+        folderTree.setCellRenderer(new TreeCellRenderer());
         folderTree.getSelectionModel()
-                  .setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+                .setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         scrollPane = new JScrollPane(folderTree);
         scrollPane.setBorder(null);
@@ -59,12 +58,9 @@ public class Foldertreepanel extends JPanel {
         setMinimumSize(new Dimension(180, 0));
         setPreferredSize(new Dimension(260, 0));
         add(headerLabel, BorderLayout.NORTH);
-        add(scrollPane,  BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.CENTER);
     }
 
-    // ── API pública usada por el controlador ──────────────────────────────────
-
-    /** Reemplaza toda la raíz del árbol con el nodo dado. */
     public void setRootNode(DefaultMutableTreeNode newRoot) {
         treeModel.setRoot(newRoot);
         treeModel.reload();
@@ -73,42 +69,52 @@ public class Foldertreepanel extends JPanel {
 
     public DefaultMutableTreeNode getSelectedNode() {
         TreePath path = folderTree.getSelectionPath();
-        if (path == null) return null;
-        return (DefaultMutableTreeNode) path.getLastPathComponent();
-    }
-
-    public String getSelectedFolderName() {
-        DefaultMutableTreeNode node = getSelectedNode();
-        return (node != null) ? node.getUserObject().toString() : null;
+        return path == null ? null : (DefaultMutableTreeNode) path.getLastPathComponent();
     }
 
     public void addTreeSelectionListener(TreeSelectionListener l) {
         folderTree.addTreeSelectionListener(l);
     }
 
-    // ── Renderer ──────────────────────────────────────────────────────────────
+    private static class TreeCellRenderer extends DefaultTreeCellRenderer {
 
-    private static class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
-
-        public FolderTreeCellRenderer() {
+        TreeCellRenderer() {
             setBackgroundSelectionColor(COLOR_SELECT);
             setBorderSelectionColor(COLOR_SELECT);
             setTextSelectionColor(Color.BLACK);
         }
 
         @Override
-        public Component getTreeCellRendererComponent(
-                JTree tree, Object value, boolean selected,
-                boolean expanded, boolean leaf, int row, boolean hasFocus) {
+        public Component getTreeCellRendererComponent(JTree tree, Object value,
+                boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 
-            super.getTreeCellRendererComponent(
-                    tree, value, selected, expanded, leaf, row, hasFocus);
+            super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
-            String name = value.toString();
-            ImageIcon icon = IconUtil.folderIconFor(name, expanded, IconUtil.SIZE_TREE);
-            if (icon != null) setIcon(icon);
+            if (value instanceof DefaultMutableTreeNode) {
+                Object obj = ((DefaultMutableTreeNode) value).getUserObject();
+                if (obj instanceof Nodo) {
+                    Nodo nodo = (Nodo) obj;
+                    setText(nodo.nombre);
+                    if (nodo.esDirectorio) {
+                        ImageIcon icon = IconUtil.folderIconFor(nodo.nombre, expanded, IconUtil.SIZE_TREE);
+                        if (icon != null) {
+                            setIcon(icon);
+                        }
+                    } else {
+                        ImageIcon icon = IconUtil.fileIconFor(nodo.nombre, IconUtil.SIZE_TREE);
+                        if (icon != null) {
+                            setIcon(icon);
+                        }
+                    }
+                } else {
+                    setText(obj.toString());
+                    ImageIcon icon = IconUtil.folderIconFor(obj.toString(), expanded, IconUtil.SIZE_TREE);
+                    if (icon != null) {
+                        setIcon(icon);
+                    }
+                }
+            }
 
-            setText(name);
             setFont(new Font("Segoe UI", Font.PLAIN, 13));
             setBorder(new EmptyBorder(2, 4, 2, 4));
             return this;

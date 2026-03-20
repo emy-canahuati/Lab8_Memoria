@@ -1,63 +1,65 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package lab8_memoria;
 
-import java.util.*;
-/**
- *
- * @author emyca
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class Lista {
-    
-    public enum Criterios{
-        NOMBRE, FECHA, TIPO, TAMANIO;
+
+    public enum Criterios {
+        NOMBRE, FECHA, TIPO, TAMANIO
     }
-    
+
     private Nodo inicio = null;
     private int size = 0;
-    
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return inicio == null;
     }
-    
-    public int size(){
+
+    public int size() {
         return size;
     }
-    
-    public void add(Nodo data){
-        if(data==null) return;
+
+    public void add(Nodo data) {
+        if (data == null) {
+            return;
+        }
         data.next = null;
-        if(isEmpty()){
+        if (isEmpty()) {
             inicio = data;
         } else {
             Nodo tmp = inicio;
-            while(tmp.next != null) tmp = tmp.next;
+            while (tmp.next != null) {
+                tmp = tmp.next;
+            }
             tmp.next = data;
         }
         size++;
     }
-    
-    public Nodo get(String nombre){
+
+    public Nodo get(String nombre) {
         Nodo tmp = inicio;
-        while (tmp != null){
-            if(tmp.getNombre().equalsIgnoreCase(nombre)) return tmp;
-            tmp=tmp.next;
+        while (tmp != null) {
+            if (tmp.getNombre().equalsIgnoreCase(nombre)) {
+                return tmp;
+            }
+            tmp = tmp.next;
         }
         return null;
     }
-    
-    public boolean remove(String nombre){
-        if(isEmpty()) return false;
-        if(inicio.getNombre().equalsIgnoreCase(nombre)){
+
+    public boolean remove(String nombre) {
+        if (isEmpty()) {
+            return false;
+        }
+        if (inicio.getNombre().equalsIgnoreCase(nombre)) {
             inicio = inicio.next;
             size--;
             return true;
         }
         Nodo tmp = inicio;
-        while(tmp.next != null){
-            if(tmp.next.getNombre().equalsIgnoreCase(nombre)){
+        while (tmp.next != null) {
+            if (tmp.next.getNombre().equalsIgnoreCase(nombre)) {
                 tmp.next = tmp.next.next;
                 size--;
                 return true;
@@ -66,66 +68,43 @@ public class Lista {
         }
         return false;
     }
-    
-    public void clear(){
+
+    public void clear() {
         inicio = null;
         size = 0;
     }
-    
-    public void print(){
-        Nodo tmp = inicio;
-        while(tmp != null){
-            System.out.println(tmp);
-            tmp = tmp.next;
-        }
-    } 
-    
-    public List<Nodo> toList(){
+
+    public List<Nodo> toList() {
         List<Nodo> lista = new ArrayList<>();
         Nodo tmp = inicio;
-        while(tmp!=null){
+        while (tmp != null) {
             lista.add(tmp);
             tmp = tmp.next;
         }
         return lista;
     }
-    
-    private int comparar(Nodo a, Nodo b, Criterios criterio){
-        switch(criterio){
-            case NOMBRE:
-                return a.getNombre().compareToIgnoreCase(b.getNombre());
-            case FECHA:
-                return Long.compare(a.getFechaModificacion(), b.getFechaModificacion());
-            case TIPO:
-                return a.getTipo().compareToIgnoreCase(b.getTipo());
-            case TAMANIO:
-                return Long.compare(a.getTamanio(), b.getTamanio());
-            default:
-                return 0;
-        }
-    }
-    
-    public void mergeSort(Criterios criterio){
+
+    public void mergeSort(Criterios criterio) {
         inicio = mergeSortRec(inicio, criterio);
     }
-    
-    private Nodo mergeSortRec(Nodo head, Criterios criterio){
-        if(head == null || head.next == null) return head;
-        
+
+    private Nodo mergeSortRec(Nodo head, Criterios criterio) {
+        if (head == null || head.next == null) {
+            return head;
+        }
         Nodo mitad = obtenerMitad(head);
         Nodo segunda = mitad.next;
         mitad.next = null;
         Nodo izq = mergeSortRec(head, criterio);
         Nodo der = mergeSortRec(segunda, criterio);
-        
         return merge(izq, der, criterio);
     }
-    
-    private Nodo merge(Nodo izq, Nodo der, Criterios criterio){
-        Nodo centinela = new Nodo(izq != null ? izq.archivo : der.archivo);
+
+    private Nodo merge(Nodo izq, Nodo der, Criterios criterio) {
+        Nodo centinela = crearCentinela(izq, der);
         Nodo actual = centinela;
-        while(izq != null && der != null){
-            if(comparar(izq, der, criterio) <= 0){
+        while (izq != null && der != null) {
+            if (comparar(izq, der, criterio) <= 0) {
                 actual.next = izq;
                 izq = izq.next;
             } else {
@@ -137,13 +116,33 @@ public class Lista {
         actual.next = (izq != null) ? izq : der;
         return centinela.next;
     }
-    
-    private Nodo obtenerMitad(Nodo head){
+
+    private Nodo crearCentinela(Nodo izq, Nodo der) {
+        Nodo ref = izq != null ? izq : der;
+        return new Nodo(ref.nombre, ref.esDirectorio, ref.tamanio, ref.fechaModificacion, ref.padre);
+    }
+
+    private Nodo obtenerMitad(Nodo head) {
         Nodo lento = head, rapido = head.next;
-        while(rapido != null && rapido.next != null){
+        while (rapido != null && rapido.next != null) {
             lento = lento.next;
             rapido = rapido.next.next;
         }
         return lento;
+    }
+
+    private int comparar(Nodo a, Nodo b, Criterios criterio) {
+        switch (criterio) {
+            case NOMBRE:
+                return a.getNombre().compareToIgnoreCase(b.getNombre());
+            case FECHA:
+                return Long.compare(a.getFechaModificacion(), b.getFechaModificacion());
+            case TIPO:
+                return a.getTipo().compareToIgnoreCase(b.getTipo());
+            case TAMANIO:
+                return Long.compare(a.getTamanio(), b.getTamanio());
+            default:
+                return 0;
+        }
     }
 }

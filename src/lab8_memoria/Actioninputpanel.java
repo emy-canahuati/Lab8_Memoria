@@ -13,7 +13,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class ActionInputPanel extends JPanel {
+public class Actioninputpanel extends JPanel {
 
     public enum ActionMode {
         IDLE, NEW_FOLDER, RENAME, COPY, PASTE, ORGANIZE
@@ -38,7 +38,7 @@ public class ActionInputPanel extends JPanel {
     private static final Color COLOR_CANCEL_BG = new Color(230, 230, 230);
     private static final Color COLOR_IDLE_TEXT = new Color(100, 100, 120);
 
-    public ActionInputPanel() {
+    public Actioninputpanel() {
         initComponents();
         buildLayout();
         setMode(ActionMode.IDLE);

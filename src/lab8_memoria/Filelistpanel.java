@@ -15,7 +15,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class FileListPanel extends JPanel {
+public class Filelistpanel extends JPanel {
 
     private static final String[] COLUMN_NAMES = {"Nombre", "Tipo", "Tamaño", "Fecha de modificación"};
     private static final int[] COLUMN_WIDTHS = {300, 120, 90, 180};
@@ -34,7 +34,7 @@ public class FileListPanel extends JPanel {
     private static final Color COLOR_GRID = new Color(235, 235, 235);
     private static final Color COLOR_EMPTY = new Color(160, 160, 160);
 
-    public FileListPanel() {
+    public Filelistpanel() {
         initComponents();
         buildLayout();
         loadDemoData();

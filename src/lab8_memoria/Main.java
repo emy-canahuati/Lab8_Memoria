@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.io.File;
 
 public class Main {
+    /*
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
@@ -21,7 +22,7 @@ public class Main {
                 e.printStackTrace();
             }
 
-            MainFrame frame = new MainFrame();
+            Mainframe frame = new Mainframe();
 
             FileExplorerController controller = new FileExplorerController(frame);
 
@@ -32,4 +33,10 @@ public class Main {
             frame.setVisible(true);
         });
     }
+*/
+    public static void main(String[] args) {
+    java.awt.EventQueue.invokeLater(() -> {
+        new Mainframe().setVisible(true);
+    });
+}
 }

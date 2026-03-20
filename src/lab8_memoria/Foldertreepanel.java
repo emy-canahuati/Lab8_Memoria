@@ -15,7 +15,7 @@ import javax.swing.tree.*;
 import java.awt.*;
 
 
-public class FolderTreePanel extends JPanel {
+public class Foldertreepanel extends JPanel {
 
     private JTree                  folderTree;
     private DefaultTreeModel       treeModel;
@@ -28,7 +28,7 @@ public class FolderTreePanel extends JPanel {
     private static final Color COLOR_SELECT = new Color(204, 232, 255);
     private static final Color COLOR_BORDER = new Color(210, 210, 210);
 
-    public FolderTreePanel() {
+    public Foldertreepanel() {
         initComponents();
         buildLayout();
         loadDemoTree();

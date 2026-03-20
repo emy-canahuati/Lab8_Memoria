@@ -12,7 +12,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class StatusBarPanel extends JPanel {
+public class Statusbarpanel extends JPanel {
 
     private JLabel lblItemCount;
     private JLabel lblSelected;
@@ -23,7 +23,7 @@ public class StatusBarPanel extends JPanel {
     private static final Color COLOR_BORDER = new Color(200, 200, 200);
     private static final Color COLOR_TEXT = new Color(80, 80, 80);
 
-    public StatusBarPanel() {
+    public Statusbarpanel() {
         initComponents();
         buildLayout();
     }

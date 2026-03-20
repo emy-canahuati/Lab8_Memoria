@@ -13,7 +13,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class ToolbarPanel extends JPanel {
+public class Toolbarpanel extends JPanel {
 
     private JButton btnNewFolder;
     private JButton btnRename;
@@ -43,7 +43,7 @@ public class ToolbarPanel extends JPanel {
     private static final Color COLOR_ACCENT = new Color(0, 120, 215);
     private static final Color COLOR_SEPARATOR = new Color(210, 210, 210);
 
-    public ToolbarPanel() {
+    public Toolbarpanel() {
         initComponents();
         buildLayout();
         applyStyles();

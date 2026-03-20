@@ -19,12 +19,12 @@ import java.util.*;
 
 public class FileExplorerController {
 
-    private final MainFrame frame;
-    private final ToolbarPanel toolbar;
-    private final FolderTreePanel treePanel;
-    private final FileListPanel listPanel;
-    private final ActionInputPanel inputPanel;
-    private final StatusBarPanel statusBar;
+    private final Mainframe frame;
+    private final Toolbarpanel toolbar;
+    private final Foldertreepanel treePanel;
+    private final Filelistpanel listPanel;
+    private final Actioninputpanel inputPanel;
+    private final Statusbarpanel statusBar;
 
     private File currentFolder;
     private final Deque<File> historyBack = new ArrayDeque<>();
@@ -38,7 +38,7 @@ public class FileExplorerController {
     private static final SimpleDateFormat SDF
             = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-    public FileExplorerController(MainFrame frame) {
+    public FileExplorerController(Mainframe frame) {
         this.frame = frame;
         this.toolbar = frame.getToolbarPanel();
         this.treePanel = frame.getFolderTreePanel();
@@ -63,7 +63,7 @@ public class FileExplorerController {
             if (currentFolder == null) {
                 return;
             }
-            inputPanel.setMode(ActionInputPanel.ActionMode.NEW_FOLDER);
+            inputPanel.setMode(Actioninputpanel.ActionMode.NEW_FOLDER);
             inputPanel.clearInput();
         });
 
@@ -73,7 +73,7 @@ public class FileExplorerController {
                 statusBar.setErrorMessage("Selecciona un elemento para renombrar.");
                 return;
             }
-            inputPanel.setMode(ActionInputPanel.ActionMode.RENAME);
+            inputPanel.setMode(Actioninputpanel.ActionMode.RENAME);
             inputPanel.setInputText(sel);
         });
 
@@ -87,7 +87,7 @@ public class FileExplorerController {
             clipboard.add(new File(currentFolder, sel));
             cutMode = false;
             toolbar.setPasteEnabled(true);
-            inputPanel.setMode(ActionInputPanel.ActionMode.COPY);
+            inputPanel.setMode(Actioninputpanel.ActionMode.COPY);
             statusBar.setMessage("Copiado: " + sel);
         });
 
@@ -95,11 +95,11 @@ public class FileExplorerController {
             if (clipboard.isEmpty()) {
                 return;
             }
-            inputPanel.setMode(ActionInputPanel.ActionMode.PASTE);
+            inputPanel.setMode(Actioninputpanel.ActionMode.PASTE);
         });
 
         toolbar.addOrganizeListener(e
-                -> inputPanel.setMode(ActionInputPanel.ActionMode.ORGANIZE)
+                -> inputPanel.setMode(Actioninputpanel.ActionMode.ORGANIZE)
         );
 
         toolbar.addBackListener(e -> navigateBack());
@@ -191,7 +191,7 @@ public class FileExplorerController {
         toolbar.setForwardEnabled(!historyForward.isEmpty());
 
         loadFolderContent(folder);
-        inputPanel.setMode(ActionInputPanel.ActionMode.IDLE);
+        inputPanel.setMode(Actioninputpanel.ActionMode.IDLE);
         statusBar.setMessage("  " + folder.getAbsolutePath());
     }
 
@@ -287,7 +287,7 @@ public class FileExplorerController {
 
             listaActual.add(new Nodo(newDir));
             renderLista();
-            inputPanel.setMode(ActionInputPanel.ActionMode.IDLE);
+            inputPanel.setMode(Actioninputpanel.ActionMode.IDLE);
             statusBar.setSuccessMessage("Carpeta '" + name + "' creada.");
         } else {
             inputPanel.showFeedback("No se pudo crear la carpeta.", false);
@@ -307,7 +307,7 @@ public class FileExplorerController {
             return;
         }
         if (newName.equalsIgnoreCase(oldName)) {
-            inputPanel.setMode(ActionInputPanel.ActionMode.IDLE);
+            inputPanel.setMode(Actioninputpanel.ActionMode.IDLE);
             return;
         }
 
@@ -329,7 +329,7 @@ public class FileExplorerController {
                 renderLista();
             }
             refreshTree();
-            inputPanel.setMode(ActionInputPanel.ActionMode.IDLE);
+            inputPanel.setMode(Actioninputpanel.ActionMode.IDLE);
             statusBar.setSuccessMessage("Renombrado a '" + newName + "'.");
         } else {
             inputPanel.showFeedback("No se pudo renombrar.", false);
@@ -371,7 +371,7 @@ public class FileExplorerController {
 
         renderLista();
         refreshTree();
-        inputPanel.setMode(ActionInputPanel.ActionMode.IDLE);
+        inputPanel.setMode(Actioninputpanel.ActionMode.IDLE);
 
         if (fail == 0) {
             statusBar.setSuccessMessage(ok + " elemento(s) pegados.");
@@ -422,7 +422,7 @@ public class FileExplorerController {
         statusBar.setProgressVisible(false);
         loadFolderContent(currentFolder);
         refreshTree();
-        inputPanel.setMode(ActionInputPanel.ActionMode.IDLE);
+        inputPanel.setMode(Actioninputpanel.ActionMode.IDLE);
         statusBar.setSuccessMessage(moved + " archivo(s) organizados.");
     }
 

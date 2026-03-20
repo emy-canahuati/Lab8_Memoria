@@ -7,13 +7,13 @@ package lab8_memoria;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame {
+public class Mainframe extends JFrame {
 
-    private ToolbarPanel toolbarPanel;
-    private FolderTreePanel folderTreePanel;
-    private FileListPanel fileListPanel;
-    private ActionInputPanel actionInputPanel;
-    private StatusBarPanel statusBarPanel;
+    private Toolbarpanel toolbarPanel;
+    private Foldertreepanel folderTreePanel;
+    private Filelistpanel fileListPanel;
+    private Actioninputpanel actionInputPanel;
+    private Statusbarpanel statusBarPanel;
 
     
     private JSplitPane splitPane;
@@ -23,19 +23,27 @@ public class MainFrame extends JFrame {
     private static final int WINDOW_HEIGHT = 680;
     private static final int DIVIDER_LOCATION = 260;
 
-    public MainFrame() {
+    public Mainframe() {
         super("Explorador de Archivos");
         initComponents();
         buildLayout();
         configureFrame();
+
+        LogicaNavegador logica = new LogicaNavegador();
+        logica.setCarpetaRaiz(System.getProperty("user.home") + "/Documentos");
+
+        AppController controller = new AppController(logica, toolbar, treePanel, listPanel);
+        treePanel.buildTree(new File(logica.getPathRaiz()));
+        controller.refrescarLista();
+
     }
 
     private void initComponents() {
-        toolbarPanel = new ToolbarPanel();
-        folderTreePanel = new FolderTreePanel();
-        fileListPanel = new FileListPanel();
-        actionInputPanel = new ActionInputPanel();
-        statusBarPanel = new StatusBarPanel();
+        toolbarPanel = new Toolbarpanel();
+        folderTreePanel = new Foldertreepanel();
+        fileListPanel = new Filelistpanel();
+        actionInputPanel = new Actioninputpanel();
+        statusBarPanel = new Statusbarpanel();
 
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,folderTreePanel,fileListPanel);
         splitPane.setDividerLocation(DIVIDER_LOCATION);
@@ -64,23 +72,23 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public ToolbarPanel getToolbarPanel() {
+    public Toolbarpanel getToolbarPanel() {
         return toolbarPanel;
     }
 
-    public FolderTreePanel getFolderTreePanel() {
+    public Foldertreepanel getFolderTreePanel() {
         return folderTreePanel;
     }
 
-    public FileListPanel getFileListPanel() {
+    public Filelistpanel getFileListPanel() {
         return fileListPanel;
     }
 
-    public ActionInputPanel getActionInputPanel() {
+    public Actioninputpanel getActionInputPanel() {
         return actionInputPanel;
     }
 
-    public StatusBarPanel getStatusBarPanel() {
+    public Statusbarpanel getStatusBarPanel() {
         return statusBarPanel;
     }
 }

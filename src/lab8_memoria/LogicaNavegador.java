@@ -24,74 +24,66 @@ public class LogicaNavegador {
         
         public Lista getFilesList(File carpetaSelec){
             Lista listaArchivos= new Lista();
-            if(carpetaSelec.isDirectory()){
-                    for(File archivo: carpetaSelec.listFiles()){
-                        //listaArchivos.add(archivo);
-                    }
-            }else{
-                    return null;
-     
+            
+            if (carpetaSelec==null || !carpetaSelec.isDirectory()) {
+                return null;
             }
+            
+            if(carpetaSelec.listFiles()==null)
+                return null;
+            
+            for(File archivo : carpetaSelec.listFiles()) {
+                listaArchivos.add(new Nodo(archivo));
+            }
+     
             return listaArchivos;
         }
-        
-        public void organizar(){
-            if(carpetaSelec.isDirectory()){
-                Lista lista= getFilesList(carpetaSelec);
-                for(int contador=0; contador<lista.size();contador++){
-                    File archivo =lista.get(contador);
-                    if(archivo.isFile()){
-                        String tipo= archivo.getTipo();
-                        File folder;
-                        switch(tipo){
-                            case ("IMAGENES"):
-                                folder= new File(getPathRaiz()+"/Imagenes");
-                                if(!folder.exists())
-                                    folder.mkdir();
-                                break;
-                            case("DOCUMENTOS"):    
-                                folder= new File(getPathRaiz()+"/Documentos");
-                                if(!folder.exists())
-                                    folder.mkdir();
-                                break;
-                            case ("MUSICA"):
-                                folder= new File(getPathRaiz()+"/Musica");
-                                if(!folder.exists())
-                                    folder.mkdir();
-                                break;
-                        }
-                        File nuevaRuta= new File(folder.getPath()+archivo.getName());
-                        archivo.renameTo(nuevaRuta);
+
+    public void organizar() {
+        if (carpetaSelec.isDirectory()) {
+            JOptionPane.showMessageDialog(null, "El archivo seleccionado debe ser una carpeta.");
+
+            Lista lista = getFilesList(carpetaSelec);
+            for (Nodo nodo : lista.toList()) {
+                File archivo = nodo.getArchivo();
+                if (archivo.isFile()) {
+                    String tipo = nodo.getTipo();
+                    String folder = null;
+                    switch (tipo) {
+                        case ("png"), ("jpg"), ("gif") -> folder = "Imagenes";
+                        case ("pdf"), ("docx"), ("txt") -> folder = "Documentos";
+                        case ("mp3"), ("wav") -> folder = "Musica";
                     }
+                    File carpetaFolder = new File(getPathRaiz()+"/"+folder);
+                    if (!carpetaFolder.exists()) {
+                        carpetaFolder.mkdir();
+                    }
+                    File nuevaRuta = new File(carpetaFolder.getPath()+"/"+archivo.getName());
+                    archivo.renameTo(nuevaRuta);
                 }
-            }else{
-                JOptionPane.showMessageDialog(null, "El archivo seleccionado debe ser una carpeta.");
             }
         }
+    }    
         
-        public void crearCarpeta(String nombre){
-            if(nombre.isBlank()){
-                JOptionPane.showMessageDialog(null, "Debe ingresar un nombre para la nueva carpeta");
-                return;
-            }
-            File carpetaNueva= new File(getPathRaiz()+nombre);
-            if(!carpetaNueva.exists())
-                carpetaNueva.mkdir();
+
+    public void crearCarpeta(String nombre) {
+        if (nombre.isBlank() || nombre.equals(" ")) {
+            JOptionPane.showMessageDialog(null, "Debe ingresar un nombre para la nueva carpeta");
+            return;
         }
-        
-        public void renombrar(File elemento, String nuevoNom){
-            File nuevoNombre= new File(getPathRaiz()+nuevoNom);
-            elemento.renameTo(nuevoNombre);
-            Lista lista=getFilesList(carpetaSelec);
-            for(int contador=0;contador<lista.size(); contador++){
-                File archivo= lista.get(contador);
-                if(archivo.)
-            }
+        File carpetaNueva = new File(getPathRaiz()+"/"+nombre);
+        if (!carpetaNueva.exists()) {
+            carpetaNueva.mkdir();
         }
-        
-        
-        
-        
-        
-        
+    }
+      
+    public void renombrar(File elemento, String nuevoNom) {
+        File nuevoNombre = new File(getPathRaiz()+"/"+ nuevoNom);
+        elemento.renameTo(nuevoNombre);
+    }    
 }
+    
+        
+        
+        
+

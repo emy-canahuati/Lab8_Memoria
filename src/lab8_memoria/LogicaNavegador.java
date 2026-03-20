@@ -4,7 +4,8 @@
  */
 package lab8_memoria;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.Files;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,6 +14,7 @@ import javax.swing.JOptionPane;
  */
 public class LogicaNavegador {
         File carpetaSelec;
+        Lista listaClipboard = new Lista();
         
         public void setCarpetaRaiz(String path){
             carpetaSelec= new File(path);
@@ -80,7 +82,45 @@ public class LogicaNavegador {
     public void renombrar(File elemento, String nuevoNom) {
         File nuevoNombre = new File(getPathRaiz()+"/"+ nuevoNom);
         elemento.renameTo(nuevoNombre);
-    }    
+    }
+    
+    public void copiar(Lista seleccionados){
+        listaClipboard.clear();
+        for(Nodo nodo : seleccionados.toList())
+            listaClipboard.add(new Nodo(nodo.getArchivo()));
+    }
+    
+    public void pegar() {
+        if (listaClipboard.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El portapapeles está vacío.");
+            return;
+        }
+ 
+        for (Nodo nodo : listaClipboard.toList()) {
+            File origen  = nodo.getArchivo();
+            File destino = new File(carpetaSelec, origen.getName());
+ 
+            if (destino.exists())
+                destino = new File(carpetaSelec, agregarSufijo(origen.getName()));
+ 
+            try (FileInputStream  fis = new FileInputStream(origen); FileOutputStream fos = new FileOutputStream(destino)) {
+ 
+                byte[] buffer = new byte[1024];
+                int bytesLeidos;
+                while ((bytesLeidos = fis.read(buffer)) != -1)
+                    fos.write(buffer, 0, bytesLeidos);
+ 
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error al pegar: " + ex.getMessage());
+            }
+        }
+    }
+    
+    private String agregarSufijo(String nombre) {
+        int dot = nombre.lastIndexOf('.');
+        if (dot < 0) return nombre + "_copia";
+        return nombre.substring(0, dot) + "_copia" + nombre.substring(dot);
+    }
 }
     
         

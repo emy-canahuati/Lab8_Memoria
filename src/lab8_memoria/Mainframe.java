@@ -7,7 +7,7 @@ package lab8_memoria;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame {
+public class Mainframe extends JFrame {
 
     private ToolbarPanel toolbarPanel;
     private FolderTreePanel folderTreePanel;
@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
     private static final int WINDOW_HEIGHT = 680;
     private static final int DIVIDER_LOCATION = 260;
 
-    public MainFrame() {
+    public Mainframe() {
         super("Explorador de Archivos");
         initComponents();
         buildLayout();

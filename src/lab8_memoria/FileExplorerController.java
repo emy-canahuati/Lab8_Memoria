@@ -19,7 +19,7 @@ import java.util.*;
 
 public class FileExplorerController {
 
-    private final MainFrame frame;
+    private final Mainframe frame;
     private final ToolbarPanel toolbar;
     private final FolderTreePanel treePanel;
     private final FileListPanel listPanel;
@@ -38,7 +38,7 @@ public class FileExplorerController {
     private static final SimpleDateFormat SDF
             = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-    public FileExplorerController(MainFrame frame) {
+    public FileExplorerController(Mainframe frame) {
         this.frame = frame;
         this.toolbar = frame.getToolbarPanel();
         this.treePanel = frame.getFolderTreePanel();

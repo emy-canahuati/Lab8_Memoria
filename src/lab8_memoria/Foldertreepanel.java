@@ -1,19 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package lab8_memoria;
 
-/**
- *
- * @author janinadiaz
- */
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
-
 
 public class Foldertreepanel extends JPanel {
 
@@ -31,7 +22,7 @@ public class Foldertreepanel extends JPanel {
     public Foldertreepanel() {
         initComponents();
         buildLayout();
-        loadDemoTree();
+        // ← loadDemoTree() eliminado: el controlador cargará el árbol virtual
     }
 
     private void initComponents() {
@@ -71,53 +62,9 @@ public class Foldertreepanel extends JPanel {
         add(scrollPane,  BorderLayout.CENTER);
     }
 
-    private void loadDemoTree() {
-        DefaultMutableTreeNode trabajo   = new DefaultMutableTreeNode("Trabajo");
-        DefaultMutableTreeNode personal  = new DefaultMutableTreeNode("Personal");
-        DefaultMutableTreeNode musica    = new DefaultMutableTreeNode("Música");
-        DefaultMutableTreeNode imagenes  = new DefaultMutableTreeNode("Imágenes");
+    // ── API pública usada por el controlador ──────────────────────────────────
 
-        trabajo.add(new DefaultMutableTreeNode("Informes"));
-        trabajo.add(new DefaultMutableTreeNode("Presentaciones"));
-        personal.add(new DefaultMutableTreeNode("Facturas"));
-        musica.add(new DefaultMutableTreeNode("Rock"));
-        musica.add(new DefaultMutableTreeNode("Jazz"));
-        imagenes.add(new DefaultMutableTreeNode("Vacaciones"));
-
-        rootNode.add(trabajo);
-        rootNode.add(personal);
-        rootNode.add(musica);
-        rootNode.add(imagenes);
-
-        treeModel.reload();
-        folderTree.expandRow(0);
-    }
-
-    
-
-    public void addFolderToSelected(String folderName) {
-        DefaultMutableTreeNode selected = getSelectedNode();
-        if (selected == null) selected = rootNode;
-        DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(folderName);
-        treeModel.insertNodeInto(newNode, selected, selected.getChildCount());
-        TreePath path = new TreePath(newNode.getPath());
-        folderTree.scrollPathToVisible(path);
-        folderTree.setSelectionPath(path);
-    }
-
-    public void renameSelectedNode(String newName) {
-        DefaultMutableTreeNode node = getSelectedNode();
-        if (node == null || node == rootNode) return;
-        node.setUserObject(newName);
-        treeModel.nodeChanged(node);
-    }
-
-    public void removeSelectedNode() {
-        DefaultMutableTreeNode node = getSelectedNode();
-        if (node == null || node == rootNode) return;
-        treeModel.removeNodeFromParent(node);
-    }
-
+    /** Reemplaza toda la raíz del árbol con el nodo dado. */
     public void setRootNode(DefaultMutableTreeNode newRoot) {
         treeModel.setRoot(newRoot);
         treeModel.reload();
@@ -139,7 +86,7 @@ public class Foldertreepanel extends JPanel {
         folderTree.addTreeSelectionListener(l);
     }
 
-    
+    // ── Renderer ──────────────────────────────────────────────────────────────
 
     private static class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 

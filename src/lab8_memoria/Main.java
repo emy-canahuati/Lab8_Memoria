@@ -8,6 +8,28 @@ package lab8_memoria;
  *
  * @author janinadiaz
  */
+
+import javax.swing.*;
+import java.io.File;
+
 public class Main {
-    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            MainFrame frame = new MainFrame();
+
+            FileExplorerController controller = new FileExplorerController(frame);
+
+            File root = new File(System.getProperty("user.home") + File.separator + "Documentos");
+            if (!root.exists()) root = new File(System.getProperty("user.home"));
+
+            controller.init(root);
+            frame.setVisible(true);
+        });
+    }
 }

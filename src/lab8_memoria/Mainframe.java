@@ -15,10 +15,10 @@ public class MainFrame extends JFrame {
     private ActionInputPanel actionInputPanel;
     private StatusBarPanel statusBarPanel;
 
-    // ── Split pane central ───────────────────────────────────────────────────
+    
     private JSplitPane splitPane;
 
-    // ── Constantes de diseño ─────────────────────────────────────────────────
+    
     private static final int WINDOW_WIDTH = 1100;
     private static final int WINDOW_HEIGHT = 680;
     private static final int DIVIDER_LOCATION = 260;
@@ -30,9 +30,6 @@ public class MainFrame extends JFrame {
         configureFrame();
     }
 
-    // ────────────────────────────────────────────────────────────────────────
-    //  INICIALIZACIÓN
-    // ────────────────────────────────────────────────────────────────────────
     private void initComponents() {
         toolbarPanel = new ToolbarPanel();
         folderTreePanel = new FolderTreePanel();
